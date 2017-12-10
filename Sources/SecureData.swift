@@ -24,6 +24,14 @@ public protocol SecureData: Equatable {
     init()
 }
 
+public extension SecureData {
+    
+    public init() {
+        
+        self.init(data: Crypto.random(Self.length))!
+    }
+}
+
 public func == <T: SecureData> (lhs: T, rhs: T) -> Bool {
     
     return lhs.data == rhs.data
@@ -43,12 +51,6 @@ public struct KeyData: SecureData {
         
         self.data = data
     }
-    
-    /// Initializes a `Key` with a random value.
-    public init() {
-        
-        self.data = random(type(of: self).length)
-    }
 }
 
 /// Cryptographic nonce
@@ -65,16 +67,11 @@ public struct Nonce: SecureData {
         
         self.data = data
     }
-    
-    public init() {
-        
-        self.data = random(type(of: self).length)
-    }
 }
 
 public struct InitializationVector: SecureData {
     
-    public static let length = IVSize
+    public static let length = Crypto.IVSize
     
     public let data: Data
     
@@ -84,10 +81,5 @@ public struct InitializationVector: SecureData {
             else { return nil }
         
         self.data = data
-    }
-    
-    public init() {
-        
-        self.data = random(type(of: self).length)
     }
 }
